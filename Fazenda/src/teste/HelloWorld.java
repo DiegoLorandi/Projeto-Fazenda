@@ -6,6 +6,7 @@ public class HelloWorld {
 		// TODO Auto-generated method stub
 		System.out.println("Olá mundo");
 		System.out.println("Connector Java/Mysql instalado");
+		System.out.println("Ciro está conectado também");
 	}
 
 }
