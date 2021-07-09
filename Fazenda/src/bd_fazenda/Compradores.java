@@ -17,12 +17,12 @@ public class Compradores {
 	private String cidade;
 	private String endereco;
 	
-	public void InserirComprador() throws SQLException {
+	public void InsereComprador() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         java.sql.Connection conn = DriverManager.getConnection(url, usuario, senha);
-        String Sql = "INSERT INTO compradores(id,nome,CNPJ,Telefone,UF,cidade,endereco) VALUES(" + getId() + ",'" + getNome() + "','" + getCnpj() + "','" + getTelefone() + "','" + getUf() + "',"+ getCidade() +","+ getEndereco() +")";
+        String Sql = "INSERT INTO compradores(id,nome,CNPJ,Telefone,UF,cidade,endereco) VALUES(" + getId() + ",'" + getNome() + "','" + getCnpj() + "','" + getTelefone() + "','" + getUf() + "','"+ getCidade() +"','"+ getEndereco() +"')";
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
         comando.execute();
         comando.close();
@@ -80,12 +80,12 @@ public class Compradores {
         conn.close();
     }
 	
-	public void RemoverComprador(int id) throws SQLException {
+	public void RemoveComprador(int id) throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         java.sql.Connection conn = DriverManager.getConnection(url, usuario, senha);
-        String Sql = "DELETE FROM animais WHERE id = " + getId();
+        String Sql = "DELETE FROM Compradores WHERE id = " + getId();
         if(JOptionPane.showConfirmDialog(null, "Deseja excluir esse comprador ?", "Cuidado", JOptionPane.OK_CANCEL_OPTION) == 0) 
         {
         	PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
@@ -97,7 +97,7 @@ public class Compradores {
         	JOptionPane.showMessageDialog(null,"Remoção Cancelada");
     }
 	
-	public void Alterar(int id) throws SQLException {
+	public void AlteraComprador(int id) throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -113,7 +113,7 @@ public class Compradores {
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
         comando.execute();
         comando.close();
-        JOptionPane.showMessageDialog(null,"Dados do Animal atualizados");
+        JOptionPane.showMessageDialog(null,"Dados do Comprador atualizados");
     }
 	
 	public int getId() {

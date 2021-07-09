@@ -18,7 +18,7 @@ public class Animais {
 	private int peso;
 	private String situacao;
 	
-	public void Inserir() throws SQLException {
+	public void InsereAnimal() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -30,7 +30,7 @@ public class Animais {
         JOptionPane.showMessageDialog(null,"Animal Incluído");
     }
 	
-	public void Alterar(int id) throws SQLException {
+	public void AlteraAnimal(int id) throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -51,7 +51,7 @@ public class Animais {
         JOptionPane.showMessageDialog(null,"Dados do Animal atualizados");
     }
 	
-	public void BuscarAnimalID(int id) throws SQLException {
+	public void ConsultaAnimalID(int id) throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -74,6 +74,23 @@ public class Animais {
         conn.close();
     }
 	
+	public void RemoveAnimal(int id) throws SQLException {
+        String usuario = "root";
+        String senha = "";
+        String url = "jdbc:mysql://localhost/fazenda";
+        java.sql.Connection conn = DriverManager.getConnection(url, usuario, senha);
+        String Sql = "DELETE FROM animais WHERE id = " + id;
+        if(JOptionPane.showConfirmDialog(null, "Deseja excluir esse Animal ?", "Cuidado", JOptionPane.OK_CANCEL_OPTION) == 0) 
+        {
+        	PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
+        	comando.execute();
+        	comando.close();       
+        	JOptionPane.showMessageDialog(null,"Animal Removido");
+        }
+        else
+        	JOptionPane.showMessageDialog(null,"Remoção Cancelada");
+    }
+	
 	public void AtualizarPeso(int id) throws SQLException {
         String usuario = "root";
         String senha = "";
@@ -87,6 +104,53 @@ public class Animais {
         JOptionPane.showMessageDialog(null,"Peso Atualizado");
     }
 	
+	public String TotalAnimais() throws SQLException {
+		String usuario = "root";
+        String senha = "";
+        String url = "jdbc:mysql://localhost/fazenda";
+        Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
+        String SqlCom = "SELECT COUNT(id) FROM Animais WHERE situacao = 'V'";
+        PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
+        ResultSet resultado = comando.executeQuery();
+        resultado.next();
+        String total_animais = (resultado.getString("Total de Animais"));
+        resultado.close();
+        comando.close();
+        conn.close();
+        return total_animais;
+    }
+	
+	public String TotalAnimaisMachos() throws SQLException {
+		String usuario = "root";
+        String senha = "";
+        String url = "jdbc:mysql://localhost/fazenda";
+        Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
+        String SqlCom = "SELECT COUNT(id) FROM Animais WHERE situacao = 'V' AND sexo = 'M' ";
+        PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
+        ResultSet resultado = comando.executeQuery();
+        resultado.next();
+        String total_animais = (resultado.getString("Total de Machos"));
+        resultado.close();
+        comando.close();
+        conn.close();
+        return total_animais;
+    }
+	
+	public String TotalAnimaisFemeas() throws SQLException {
+		String usuario = "root";
+        String senha = "";
+        String url = "jdbc:mysql://localhost/fazenda";
+        Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
+        String SqlCom = "SELECT COUNT(id) FROM Animais WHERE situacao = 'V' AND sexo = 'F'";
+        PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
+        ResultSet resultado = comando.executeQuery();
+        resultado.next();
+        String total_animais = (resultado.getString("Total de Femeas"));
+        resultado.close();
+        comando.close();
+        conn.close();
+        return total_animais;
+    }
 	
 	public int getId() {
 		return id;
