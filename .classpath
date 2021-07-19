@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/connector"/>
 	<classpathentry kind="lib" path="C:/mysql-connector-java"/>
 	<classpathentry kind="lib" path="C:/Users/casa dos lorandis/Desktop/mysql-connector-java-5.1.8/mysql-connector-java-5.1.8-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ciroe/eclipse-workspace/mysql-connector-java-5.1.48/mysql-connector-java-5.1.48.jar"/>
 	<classpathentry kind="output" path="Fazenda/bin"/>
 </classpath>

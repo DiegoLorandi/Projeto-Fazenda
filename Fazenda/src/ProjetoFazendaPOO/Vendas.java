@@ -1,37 +1,34 @@
-package bd_fazenda;
+package ProjetoFazendaPOO;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
-
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
 
 public class Vendas {
-	private int id;
-	private int gta;
+	private String id;
+	private String gta;
 	private String datavenda;
 	private float valorvenda;
-	private int idanimal;
-	private int idcomprador;
+	private String idanimal;
+	private String idcomprador;
 	
 	public void InsereVenda() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         java.sql.Connection conn = DriverManager.getConnection(url, usuario, senha);
-        String Sql = "INSERT INTO Vendas(id,GTA,DataVenda,ValorVenda,id_animal,cidade,endereco) VALUES(" + getId() + ",'" + getGta() + "','" + getDatavenda() + "'," + getValorvenda() + ","+ getIdanimal() +","+ getIdcomprador() +")";
+        String Sql = "INSERT INTO Vendas(id,GTA,DataVenda,ValorVenda,idAnimal,idComprador) VALUES(" + getId() + ",'" + getGta() + "','" + getDatavenda() + "'," + getValorvenda() + ","+ getIdanimal() +","+ getIdcomprador() +")";
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
         comando.execute();
         comando.close();
         JOptionPane.showMessageDialog(null,"Venda incluída");
     }
 	
-	public void RemoveVenda(int id) throws SQLException {
+	public void RemoveVenda() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -48,7 +45,7 @@ public class Vendas {
         	JOptionPane.showMessageDialog(null,"Remoção Cancelada");
     }
 	
-	public void AlteraVenda(int id) throws SQLException {
+	public void AlteraVenda() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -57,76 +54,70 @@ public class Vendas {
         String Sql = "UPDATE Vendas SET GTA = '" + getGta() + "',"
         		+ " DataVenda = '"+ getDatavenda() +"',"
         		+ " ValorVenda = '"+ getValorvenda() +"',"
-        		+ " id_animal = '"+ getIdanimal() +"',"
-        		+ " id_comprador = '"+ getIdcomprador() +"',"
-        		+ " WHERE id = '"+ id +"'   ";
+        		+ " idAnimal = '"+ getIdanimal() +"',"
+        		+ " idComprador = '"+ getIdcomprador() +"'"
+        		+ " WHERE id = '"+ getId() +"';";
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
         comando.execute();
         comando.close();
         JOptionPane.showMessageDialog(null,"Dados da Venda atualizados");
     }
 	
-	public void ConsultarVenda(int id) throws SQLException {
+	public void ConsultarVenda() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
-        String SqlCom = "SELECT * FROM Vendas WHERE id ="+ id;
-        PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
-        ResultSet resultado = comando.executeQuery();
-        ArrayList<String> registros = new ArrayList<>();
-        while(resultado.next())
-        {
-            registros.add(resultado.getString("id") + 
-                    " " + resultado.getString("GTA") + 
-                    " " + resultado.getString("DataVenda") + 
-                    " " + resultado.getString("ValorVenda") +
-                    " " + resultado.getString("id_animal") + 
-                    " " + resultado.getString("id_comprador") ) ; 
-        }
-        String lista = "";
-        int j;
-        for(j=0; j<registros.size(); j++) {
-            lista = lista + registros.get(j) + "\n";
-        }
-        JOptionPane.showMessageDialog(null, lista);
-        resultado.close();
-        comando.close();
-        conn.close();
-    }
-	
-	public void MaiorVenda() throws SQLException {
-        String usuario = "root";
-        String senha = "";
-        String url = "jdbc:mysql://localhost/fazenda";
-        Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
-        String SqlCom = "SELECT * FROM Vendas WHERE ValorVenda = (SELECT MAX(ValorVenda) FROM Vendas)";
+        String SqlCom = "SELECT * FROM Vendas WHERE id ="+ getId();
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
         ResultSet resultado = comando.executeQuery();
         resultado.next();
-        setId(resultado.getInt("Id"));
-        setGta(resultado.getInt("GTA"));
-        setDatavenda(resultado.getString("DataVenda"));
-        setValorvenda(resultado.getInt("ValorVenda"));
-        setIdanimal(resultado.getInt("id_animal"));
-        setIdcomprador(resultado.getInt("id_comprador"));
 
+        setId(resultado.getString("id")); 
+        setGta(resultado.getString("GTA"));
+        setDatavenda(resultado.getString("DataVenda"));
+        setValorvenda(resultado.getFloat("ValorVenda"));
+        setIdanimal(resultado.getString("idAnimal"));
+        setIdcomprador(resultado.getString("idComprador")); 
+        
         resultado.close();
         comando.close();
         conn.close();
+        JOptionPane.showMessageDialog(null, "Consulta com Sucesso!");
     }
+		
+	public void ConsultarGTA() throws SQLException {
+		float valorTotal = 0;
+		float valorParcial = 0;
+        String usuario = "root";
+        String senha = "";
+        String url = "jdbc:mysql://localhost/fazenda";
+        Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
+        String SqlCom = "SELECT * FROM Vendas WHERE GTA = " + getGta();
+        PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
+        ResultSet resultado = comando.executeQuery();
+        resultado.next();
+        setDatavenda(resultado.getString("DataVenda"));
+        setIdcomprador(resultado.getString("idComprador"));
+        valorTotal = Float.parseFloat(resultado.getString("ValorVenda"));
+		while(resultado.next()){
+            valorParcial = Float.parseFloat(resultado.getString("ValorVenda"));
+            valorTotal = valorTotal + valorParcial;
+        }
+		setValorvenda(valorTotal);
+        JOptionPane.showMessageDialog(null, "Consulta com Sucesso!");
+	}
 	
-	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
-	public int getGta() {
+	public String getGta() {
 		return gta;
 	}
-	public void setGta(int gta) {
+	public void setGta(String gta) {
 		this.gta = gta;
 	}
 	public String getDatavenda() {
@@ -141,17 +132,18 @@ public class Vendas {
 	public void setValorvenda(float valorvenda) {
 		this.valorvenda = valorvenda;
 	}
-	public int getIdanimal() {
+	public String getIdanimal() {
 		return idanimal;
 	}
-	public void setIdanimal(int idanimal) {
+	public void setIdanimal(String idanimal) {
 		this.idanimal = idanimal;
 	}
-	public int getIdcomprador() {
+	public String getIdcomprador() {
 		return idcomprador;
 	}
-	public void setIdcomprador(int idcomprador) {
+	public void setIdcomprador(String idcomprador) {
 		this.idcomprador = idcomprador;
 	}
+	
 
 }

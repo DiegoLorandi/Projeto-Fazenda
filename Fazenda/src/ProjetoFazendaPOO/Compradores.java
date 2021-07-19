@@ -1,21 +1,21 @@
-package bd_fazenda;
+package ProjetoFazendaPOO;
 
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
 public class Compradores {
-	private int id;
+	private String id;
 	private String nome;
 	private String cnpj;
 	private String telefone;
 	private String uf;
 	private String cidade;
 	private String endereco;
+	String lista;
 	
 	public void InsereComprador() throws SQLException {
         String usuario = "root";
@@ -29,12 +29,12 @@ public class Compradores {
         JOptionPane.showMessageDialog(null,"Comprador incluído");
     }
 	
-	public void ConsultarCompradorID(String id) throws SQLException {
+	public void ConsultarCompradorID() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
-        String SqlCom = "SELECT * FROM Compradores WHERE id = " + id;
+        String SqlCom = "SELECT * FROM Compradores WHERE id = " + getId();
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
         ResultSet resultado = comando.executeQuery();
         resultado.next();
@@ -43,44 +43,37 @@ public class Compradores {
         setTelefone(resultado.getString("Telefone"));
         setUf(resultado.getString("UF"));
         setCidade(resultado.getString("Cidade"));
-        setEndereco(resultado.getString("Endereço"));
+        setEndereco(resultado.getString("Endereco"));
 
         resultado.close();
         comando.close();
         conn.close();
     }
 	
-	public void ConsultarCompradorCidade(String Cidade) throws SQLException {
+	public String ConsultarCompradorCidade() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         Connection conn = (Connection) DriverManager.getConnection(url, usuario, senha);
-        String SqlCom = "SELECT * FROM Compradores WHERE Cidade LIKE ="+Cidade;
+        String SqlCom = "SELECT * FROM compradores WHERE Cidade = '" + getCidade() + "';";
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(SqlCom);
         ResultSet resultado = comando.executeQuery();
-        ArrayList<String> registros = new ArrayList<>();
+        resultado.next();
+        lista = resultado.getString("id") + ", " + resultado.getString("Nome") + ", " + resultado.getString("Telefone") + "\n";
         while(resultado.next())
         {
-            registros.add(resultado.getString("id") + 
-                    " " + resultado.getString("Nome") + 
-                    " " + resultado.getString("CNPJ") + 
-                    " " + resultado.getString("Telefone") +
-                    " " + resultado.getString("UF") + 
-                    " " + resultado.getString("Cidade") + 
-                    " " + resultado.getString("Endereco"));
+        	lista = lista + resultado.getString("id") + ", " + resultado.getString("Nome") + ", " + resultado.getString("Telefone") + "\n";
         }
-        String lista = "";
-        int j;
-        for(j=0; j<registros.size(); j++) {
-            lista = lista + registros.get(j) + "\n";
-        }
-        JOptionPane.showMessageDialog(null, lista);
+        
         resultado.close();
         comando.close();
         conn.close();
+        JOptionPane.showMessageDialog(null, "Consulta com Sucesso!");
+        
+        return lista;
     }
 	
-	public void RemoveComprador(int id) throws SQLException {
+	public void RemoveComprador() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
@@ -97,29 +90,29 @@ public class Compradores {
         	JOptionPane.showMessageDialog(null,"Remoção Cancelada");
     }
 	
-	public void AlteraComprador(int id) throws SQLException {
+	public void AlteraComprador() throws SQLException {
         String usuario = "root";
         String senha = "";
         String url = "jdbc:mysql://localhost/fazenda";
         java.sql.Connection conn = DriverManager.getConnection(url, usuario, senha);
    
-        String Sql = "UPDATE Compradores SET nome = '" + getNome() + "',"
+        String Sql = "UPDATE Compradores SET Nome = '" + getNome() + "',"
         		+ " CNPJ = '"+ getCnpj() +"',"
         		+ " Telefone = '"+ getTelefone() +"',"
         		+ " UF = '"+ getUf() +"',"
         		+ " Cidade = '"+ getCidade() +"',"
-        		+ " Endereco = '"+ getEndereco() +"',"
-        		+ " WHERE id = '"+ id +"'   ";
+        		+ " Endereco = '"+ getEndereco() +"'"
+        		+ " WHERE id = '"+ getId() +"';";
         PreparedStatement comando = (PreparedStatement) conn.prepareStatement(Sql);
         comando.execute();
         comando.close();
         JOptionPane.showMessageDialog(null,"Dados do Comprador atualizados");
     }
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getNome() {
